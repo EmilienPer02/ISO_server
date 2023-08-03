@@ -2,7 +2,7 @@ version: '3.3'
 services:
   reverse-proxy:
     # The official v2 Traefik docker image
-    image: traefik:v2.10
+    image: traefik:latest
     # Enables the web UI and tells Traefik to listen to docker
     command:
       - "--providers.docker=true"
@@ -15,7 +15,7 @@ services:
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./acme.json:/acme.json
+      # - ./acme.json:/acme.json
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.example.com`)"  # Replace with your domain
