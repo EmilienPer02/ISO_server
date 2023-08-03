@@ -41,5 +41,5 @@ services:
        - db_password
 secrets:
    db_password:
-     file: ~/tmp/db_password.txt
+     file: /tmp/db_password.txt
       
