@@ -1,15 +1,19 @@
 version: '3.3'
 services:
-  reverse_proxy:
-    image: 'jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.10
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
     ports:
-      - '80:80' # Public HTTP Port
-      - '443:443' # Public HTTPS Port
-      - '8080:81' # Admin Web Port
-    #volumes:
-    #  - ./data:/data
-    #  - ./letsencrypt:/etc/letsencrypt
+      # The HTTP port
+      - "80:80"
+      - "443:443"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
   sonarqube:
     image: sonarqube:community
     hostname: sonarqube
