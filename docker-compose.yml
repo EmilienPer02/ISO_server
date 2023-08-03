@@ -7,7 +7,7 @@ services:
       # These ports are in format <host-port>:<container-port>
       - '80:80' # Public HTTP Port
       - '443:443' # Public HTTPS Port
-      - '81:81' # Admin Web Port
+      - '8080:81' # Admin Web Port
 
 
     # Uncomment the next line if you uncomment anything in the section
