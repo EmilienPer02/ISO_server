@@ -4,26 +4,18 @@ services:
     # The official v2 Traefik docker image
     image: traefik:latest
     # Enables the web UI and tells Traefik to listen to docker
-    command:
+        command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      #- "--entrypoints.websecure.address=:443"
-      #- "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      #- "--certificatesresolvers.myresolver.acme.email=your@email.com"  # Replace with your email
-      #- "--certificatesresolvers.myresolver.acme.storage=/acme.json"
-
+    ports:
+      - "80:80"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      # - ./acme.json:/acme.json
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`10.1.20.100`)"  # Replace with your domain
+      - "traefik.http.routers.traefik.rule=Host(`traefik.example.com`)"  # Replace with your domain
       - "traefik.http.routers.traefik.entrypoints=web"
-      #- "traefik.http.routers.traefik.entrypoints=websecure"
-      #- "traefik.http.routers.traefik.tls=true"
-      #- "traefik.http.routers.traefik.tls.certresolver=myresolver"
-      
   sonarqube:
     image: sonarqube:community
     hostname: sonarqube
@@ -46,7 +38,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
       - "traefik.http.routers.sonarqube.entrypoints=web"
-      #- "traefik.http.routers.sonarqube.tls=true"
       - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
       
   db:
