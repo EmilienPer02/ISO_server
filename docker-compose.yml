@@ -7,9 +7,9 @@ services:
       - '80:80' # Public HTTP Port
       - '443:443' # Public HTTPS Port
       - '8080:81' # Admin Web Port
-    volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+    #volumes:
+    #  - ./data:/data
+    #  - ./letsencrypt:/etc/letsencrypt
   sonarqube:
       image: sonarqube
       restart: unless-stopped
@@ -20,11 +20,11 @@ services:
       ports:
         - "9000:9000"
         - "9092:9092"
-      volumes:
-        - sonarqube_conf:/opt/sonarqube/conf
-        - sonarqube_data:/opt/sonarqube/data
-        - sonarqube_extensions:/opt/sonarqube/extensions
-        - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+     # volumes:
+     #   - sonarqube_conf:/opt/sonarqube/conf
+     #   - sonarqube_data:/opt/sonarqube/data
+     #   - sonarqube_extensions:/opt/sonarqube/extensions
+     #   - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
       secrets:
        - db_password
   db:
@@ -34,9 +34,9 @@ services:
         - POSTGRES_USER=sonarqube
         - POSTGRES_PASSWORD=/run/secrets/db_password
         - POSTGRES_DB=sonarqube
-      volumes:
-        - sonarqube_db:/var/lib/postgresql
-        - postgresql_data:/var/lib/postgresql/data
+     # volumes:
+     #   - sonarqube_db:/var/lib/postgresql
+     #   - postgresql_data:/var/lib/postgresql/data
       secrets:
        - db_password
 secrets:
