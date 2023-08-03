@@ -4,13 +4,13 @@ services:
     # The official v2 Traefik docker image
     image: traefik:v2.10
     # Enables the web UI and tells Traefik to listen to docker
-    command: --api.insecure=true --providers.docker
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
     ports:
       # The HTTP port
       - "80:80"
       - "443:443"
-      # The Web UI (enabled by --api.insecure=true)
-      - "8080:8080"
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
@@ -29,9 +29,15 @@ services:
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
     ports:
-      - "9000:9000"
+      - "127.0.0.1:9000:9000"
     secrets:
        - db_password
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
+      - "traefik.http.routers.sonarqube.entrypoints=web"
+      - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
+      
   db:
     image: postgres:13
     hostname: postgresql
