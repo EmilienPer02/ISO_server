@@ -1,24 +1,45 @@
 version: '3.3'
 services:
-  app:
+  reverse_proxy:
     image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
     ports:
-      # These ports are in format <host-port>:<container-port>
       - '80:80' # Public HTTP Port
       - '443:443' # Public HTTPS Port
       - '8080:81' # Admin Web Port
-
-
-    # Uncomment the next line if you uncomment anything in the section
-    # environment:
-      # Uncomment this if you want to change the location of
-      # the SQLite DB file within the container
-      # DB_SQLITE_FILE: "/data/database.sqlite"
-
-      # Uncomment this if IPv6 is not enabled on your host
-      # DISABLE_IPV6: 'true'
-
     volumes:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
+  sonarqube:
+      image: sonarqube
+      restart: unless-stopped
+      environment:
+        - SONARQUBE_JDBC_USERNAME=sonarqube
+        - SONARQUBE_JDBC_PASSWORD=/run/secrets/db_password
+        - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonarqube
+      ports:
+        - "9000:9000"
+        - "9092:9092"
+      volumes:
+        - sonarqube_conf:/opt/sonarqube/conf
+        - sonarqube_data:/opt/sonarqube/data
+        - sonarqube_extensions:/opt/sonarqube/extensions
+        - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+      secrets:
+       - db_password
+    db:
+      image: postgres
+      restart: unless-stopped
+      environment:
+        - POSTGRES_USER=sonarqube
+        - POSTGRES_PASSWORD=/run/secrets/db_password
+        - POSTGRES_DB=sonarqube
+      volumes:
+        - sonarqube_db:/var/lib/postgresql
+        - postgresql_data:/var/lib/postgresql/data
+      secrets:
+       - db_password
+secrets:
+   db_password:
+     file: ~/tmp/db_password.txt
+      
