@@ -4,7 +4,7 @@ services:
     image: traefik:latest
     command:
       - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.exposedbydefault=true"
       - "--entrypoints.web.address=:80"
     ports:
       - "80:80"
