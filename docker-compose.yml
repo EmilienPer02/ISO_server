@@ -3,16 +3,15 @@ services:
   traefik:
      image: traefik:v2.4
      command:
-        - "--log.level=INFO"
-        - "--accesslog"
-        - "--api.insecure=true"
-        - "--providers.docker=true"
-        - "--providers.docker.exposedByDefault=false"
-        - "--entryPoints.web.address=:80"
-        - "--tracing.jaeger=true"
-        - "--tracing.jaeger.sampling.type=const"
-        - "--tracing.jaeger.sampling.param=1"
-        - "--tracing.jaeger.local-agent-host-port=jaeger:6831"
+      - "--log.level=INFO"
+      - "--accesslog"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--tracing.jaeger=true"
+      - "--tracing.jaeger.sampling.type=const"
+      - "--tracing.jaeger.sampling.param=1"
      ports:
         - "80:80"
         - "8080:8080"
