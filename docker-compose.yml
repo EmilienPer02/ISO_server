@@ -36,6 +36,7 @@ services:
       - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
       - "traefik.http.routers.sonarqube.entrypoints=web"
       - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
+      - "traefik.http.services.sonarqube.loadbalancer.server.ip=127.0.0.1"
   db:
     image: postgres:13
     container_name: postgresql
