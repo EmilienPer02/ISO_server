@@ -36,6 +36,8 @@ services:
       - "traefik.http.middlewares.sonarqube-prefix.stripprefix.prefixes=/sonarqube"
     networks:
       - traefik-net
+    ports:
+      - "9000:9000"
 
   db:
     image: postgres:13
