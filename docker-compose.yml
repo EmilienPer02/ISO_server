@@ -43,6 +43,8 @@ services:
       - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
       - "traefik.http.routers.sonarqube.entrypoints=web"
       - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
+      - "traefik.docker.network=sonarqube-network"
+
 
       
   db:
