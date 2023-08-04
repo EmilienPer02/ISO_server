@@ -3,15 +3,16 @@ services:
   traefik:
      image: traefik:v2.4
      command:
-        - --log.level=INFO
-        - --accesslog=true
-        - --api.insecure=true
-        - --providers.docker=true
-        - --providers.docker.exposedbydefault=false
-        - --entrypoints.web.address=:80
-        - --tracing=true
-        - --tracing.provider=jaeger  # Utilisez Jaeger comme fournisseur de traçabilité
-        - --tracing.jaeger.collector.endpoint=http://jaeger:14268/api/traces  # Point de terminaison Jaeger
+       - "--log.level=INFO"
+      - "--accesslog"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--tracing.jaeger=true"
+      - "--tracing.jaeger.sampling.type=const"
+      - "--tracing.jaeger.sampling.param=1"
+      - "--tracing.jaeger.local-agent-host-port=jaeger:6831" 
      ports:
         - "80:80"
         - "8080:8080"
