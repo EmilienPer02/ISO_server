@@ -3,14 +3,15 @@ services:
   traefik:
      image: traefik:v2.4
      command:
-        - --log.level=INFO  # Niveau de journalisation (DEBUG, INFO, WARN, ERROR, FATAL, PANIC)
-        - --accesslog=true  # Activer les journaux d'accès
+        - --log.level=INFO
+        - --accesslog=true
         - --api.insecure=true
         - --providers.docker=true
         - --providers.docker.exposedbydefault=false
         - --entrypoints.web.address=:80
-        - --tracing=true  # Activer la traçabilité
-        - --entryPoints.web.http.middlewares=my-tracing  # Middleware de traçabilité personnalisé
+        - --tracing=true
+        - --tracing.provider=jaeger  # Utilisez Jaeger comme fournisseur de traçabilité
+        - --tracing.jaeger.collector.endpoint=http://jaeger:14268/api/traces  # Point de terminaison Jaeger
      ports:
         - "80:80"
         - "8080:8080"
@@ -48,6 +49,13 @@ services:
       - postgresql:/var/lib/postgresql/data
     secrets:
       - db_password
+  jaeger:
+    image: jaegertracing/all-in-one:1.26  # Utilisez la version correcte de Jaeger
+    ports:
+      - "16686:16686"  # Interface Web Jaeger
+      - "14268:14268"  # Point de terminaison des traces
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
 volumes:
   sonarqube_data:
   sonarqube_extensions:
