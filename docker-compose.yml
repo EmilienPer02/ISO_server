@@ -38,6 +38,7 @@ services:
   sonarqube-db:
     image: postgres:13
     container_name: postgresql
+    
     environment:
       POSTGRES_USER: sonar
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password
@@ -46,7 +47,8 @@ services:
       - postgresql:/var/lib/postgresql/data
     secrets:
       - db_password
-
+    networks:
+      - sonarnet
   jaeger:
     image: jaegertracing/all-in-one:1.27
     environment:
