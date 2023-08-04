@@ -7,6 +7,8 @@ services:
       - "--providers.docker.exposedbydefault=true"
       - "--entrypoints.web.address=:80"
       - "--api.insecure=true"
+      - "--accesslog=true"
+      - "--tracing=true"
     ports:
       - "80:80"
       - "8080:8080"
@@ -16,6 +18,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.example.com`)"  # Remplacer par votre domaine
       - "traefik.http.routers.traefik.entrypoints=web"
+      
 
   sonarqube:
     image: sonarqube:community
