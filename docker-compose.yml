@@ -12,7 +12,7 @@ services:
         - "--tracing.jaeger=true"
         - "--tracing.jaeger.sampling.type=const"
         - "--tracing.jaeger.sampling.param=1"
-        - "--tracing.jaeger.remote-sampler.host-ports=jaeger:6831"
+        - "--tracing.jaeger.local-agent-host-port=jaeger:6831"
      ports:
         - "80:80"
         - "8080:8080"
