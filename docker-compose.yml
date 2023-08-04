@@ -1,5 +1,7 @@
 version: '3.3'
 services:
+
+
   traefik:
      image: traefik:v2.4
      command:
@@ -16,6 +18,9 @@ services:
      volumes:
        - /var/run/docker.sock:/var/run/docker.sock
      container_name: reverse_proxy  
+
+
+     
   sonarqube:
     image: sonarqube:community
     container_name: sonarqube
@@ -36,7 +41,8 @@ services:
       - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
       - "traefik.http.routers.sonarqube.entrypoints=web"
       - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
-      - "traefik.http.services.sonarqube.loadbalancer.server.ip=127.0.0.1"
+
+      
   db:
     image: postgres:13
     container_name: postgresql
@@ -48,6 +54,9 @@ services:
       - postgresql:/var/lib/postgresql/data
     secrets:
       - db_password
+
+
+      
   jaeger:
     image: jaegertracing/all-in-one:1.26  # Utilisez la version correcte de Jaeger
     ports:
@@ -55,6 +64,9 @@ services:
       - "14268:14268"  # Point de terminaison des traces
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+
+
+      
 volumes:
   sonarqube_data:
   sonarqube_extensions:
@@ -63,3 +75,4 @@ volumes:
 secrets:
   db_password:
     file: /tmp/db_password.txt
+
