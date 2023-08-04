@@ -34,6 +34,8 @@ services:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
+    networks:
+      - sonarqube-network
     ports:
       - "9000:9000"
     labels:
@@ -54,6 +56,8 @@ services:
       - postgresql:/var/lib/postgresql/data
     secrets:
       - db_password
+    networks:
+      - sonarqube-network
 
 
       
@@ -75,4 +79,6 @@ volumes:
 secrets:
   db_password:
     file: /tmp/db_password.txt
-
+networks:
+  sonarqube-network:
+    driver: bridge
