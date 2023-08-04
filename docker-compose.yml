@@ -1,81 +1,65 @@
-version: '3.3'
+version: '3.8'
+
 services:
-
-
   traefik:
-     image: traefik:v2.4
-     command:
-      - "--log.level=INFO"
-      - "--accesslog"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedByDefault=false"
-      - "--entryPoints.web.address=:80"
-      - "--tracing.jaeger=true"
-     ports:
-        - "80:80"
-        - "8080:8080"
-     volumes:
-       - /var/run/docker.sock:/var/run/docker.sock
-     environment: 
-                    - JAEGER_SERVICE_NAME=hello_service
-                    - JAEGER_AGENT_HOST=jaeger
-                    - JAEGER_AGENT_PORT=6831     
-                    - JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger:5778
-     
-  sonarqube:
-    image: sonarqube:community
-    container_name: sonarqube
-    depends_on:
-      - db
-    environment:
-      SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
-      SONAR_JDBC_USERNAME: sonar
-      SONAR_JDBC_PASSWORD: /run/secrets/db_password
+    image: traefik:v2.5
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    ports:
+      - "80:80"
+      - "8080:8080"
     volumes:
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
-      - sonarqube_logs:/opt/sonarqube/logs
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.http.routers.traefik.rule=Host(`traefik.example.com`)"
+      - "traefik.http.routers.traefik.entrypoints=web"
+
+  sonarqube:
+    image: sonarqube:latest
+    environment:
+      - SONAR_JDBC_URL=jdbc:h2:tcp://sonarqube-db:9092/sonar
+      - SONAR_JDBC_USERNAME=sonar
+      - SONAR_JDBC_PASSWORD=/run/secrets/db_password
     ports:
       - "127.0.0.1:9000:9000"
+    networks:
+      - sonarnet
+    depends_on:
+      - sonarqube-db
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
+      - "traefik.http.routers.sonarqube.rule=Host(`sonar.example.com`)"
       - "traefik.http.routers.sonarqube.entrypoints=web"
       - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
 
-
-      
-  db:
-    image: postgres:13
-    container_name: postgresql
+  sonarqube-db:
+    image: postgres:12
     environment:
-      POSTGRES_USER: sonar
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
-      POSTGRES_DB: sonar
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=/run/secrets/db_password
+      - POSTGRES_DB=sonar
     volumes:
-      - postgresql:/var/lib/postgresql/data
-    secrets:
-      - db_password
+      - sonarqube-db-data:/var/lib/postgresql/data
 
-
-      
   jaeger:
-    image: jaegertracing/all-in-one:latest  # Utilisez la version correcte de Jaeger
-    ports:
-      - "16686:16686"  # Interface Web Jaeger
-      - "14268:14268"  # Point de terminaison des traces
-      - "6831:6831/udp"
+    image: jaegertracing/all-in-one:1.27
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+    ports:
+      - "9411:9411"
+    networks:
+      - sonarnet
+    labels:
+      - "traefik.http.routers.jaeger.rule=Host(`jaeger.example.com`)"
+      - "traefik.http.routers.jaeger.entrypoints=web"
 
+networks:
+  sonarnet:
+    driver: bridge
 
-      
 volumes:
-  sonarqube_data:
-  sonarqube_extensions:
-  sonarqube_logs:
-  postgresql:
+  sonarqube-db-data:
 secrets:
   db_password:
     file: /tmp/db_password.txt
