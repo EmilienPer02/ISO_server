@@ -9,6 +9,7 @@ services:
       - "--api.insecure=true"
       - "--accesslog=true"
       - "--tracing=true"
+      -"--tracing.serviceName=traefik"
     ports:
       - "80:80"
       - "8080:8080"
