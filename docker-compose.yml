@@ -28,6 +28,8 @@ services:
       - sonarnet
     depends_on:
       - sonarqube-db
+    secrets:
+      - db_password
     labels:
       - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
       - "traefik.http.routers.sonarqube.entrypoints=web"
