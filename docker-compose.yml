@@ -17,8 +17,6 @@ services:
         - "8080:8080"
      volumes:
        - /var/run/docker.sock:/var/run/docker.sock
-     container_name: reverse_proxy  
-
 
      
   sonarqube:
@@ -34,16 +32,13 @@ services:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
-    networks:
-      - sonarqube-network
     ports:
-      - "9000:9000"
+      - "127.0.0.1:9000:9000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
       - "traefik.http.routers.sonarqube.entrypoints=web"
       - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
-      - "traefik.docker.network=sonarqube-network"
 
 
       
@@ -58,8 +53,6 @@ services:
       - postgresql:/var/lib/postgresql/data
     secrets:
       - db_password
-    networks:
-      - sonarqube-network
 
 
       
@@ -68,6 +61,7 @@ services:
     ports:
       - "16686:16686"  # Interface Web Jaeger
       - "14268:14268"  # Point de terminaison des traces
+      - "127.0.0.1:59192:59192"
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
 
@@ -81,6 +75,3 @@ volumes:
 secrets:
   db_password:
     file: /tmp/db_password.txt
-networks:
-  sonarqube-network:
-    driver: bridge
