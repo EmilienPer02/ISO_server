@@ -1,26 +1,5 @@
 version: '3.3'
 services:
-  reverse-proxy:
-    image: traefik:latest
-    command:
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=true"
-      - "--entrypoints.web.address=:80"
-      - "--api.insecure=true"
-      - "--accesslog=true"
-      - "--tracing=true"
-      - "--tracing.serviceName=reverse-proxy"
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.example.com`)"  # Remplacer par votre domaine
-      - "traefik.http.routers.traefik.entrypoints=web"
-      
-
   sonarqube:
     image: sonarqube:community
     container_name: sonarqube
@@ -34,17 +13,8 @@ services:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
-      - "traefik.http.routers.sonarqube.entrypoints=web"
-      - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
-      - "traefik.http.middlewares.sonarqube-prefix.stripprefix.prefixes=/sonarqube"
-    networks:
-      - traefik-net
     ports:
       - "9000:9000"
-
   db:
     image: postgres:13
     container_name: postgresql
@@ -56,13 +26,6 @@ services:
       - postgresql:/var/lib/postgresql/data
     secrets:
       - db_password
-    networks:
-      - traefik-net
-
-networks:
-  traefik-net:
-    external: true
-
 volumes:
   sonarqube_data:
   sonarqube_extensions:
