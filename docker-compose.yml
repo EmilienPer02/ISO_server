@@ -17,7 +17,11 @@ services:
         - "8080:8080"
      volumes:
        - /var/run/docker.sock:/var/run/docker.sock
-
+     environment: 
+                    - JAEGER_SERVICE_NAME=hello_service
+                    - JAEGER_AGENT_HOST=jaeger
+                    - JAEGER_AGENT_PORT=6831     
+                    - JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger:5778
      
   sonarqube:
     image: sonarqube:community
