@@ -29,7 +29,7 @@ services:
     depends_on:
       - sonarqube-db
     labels:
-      - "traefik.http.routers.sonarqube.rule=Host(`sonar.example.com`)"
+      - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
       - "traefik.http.routers.sonarqube.entrypoints=web"
       - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
 
