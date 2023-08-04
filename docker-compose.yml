@@ -63,6 +63,10 @@ networks:
 
 volumes:
   sonarqube-db-data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  postgresql:
 secrets:
   db_password:
     file: /tmp/db_password.txt
