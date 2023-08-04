@@ -3,13 +3,19 @@ services:
   traefik:
     image: traefik:v2.4
     command:
+      - --log.level=INFO  # Niveau de journalisation (DEBUG, INFO, WARN, ERROR, FATAL, PANIC)
+      - --accesslog=true  # Activer les journaux d'accès
+      - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
-    ports:
+      - --tracing=true  # Activer la traçabilité
+      - --entryPoints.web.http.middlewares=my-tracing  # Middleware de traçabilité personnalisé
+     ports:
       - "80:80"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - "8080:8080"
+     volumes:
+       - /var/run/docker.sock:/var/run/docker.sock
     container_name: reverse_proxy  
   sonarqube:
     image: sonarqube:community
