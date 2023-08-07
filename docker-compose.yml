@@ -13,6 +13,11 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.example.com`)" # Remplacez par votre domaine
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.service=api@internal"
       
   sonarqube:
       image: sonarqube
@@ -22,14 +27,16 @@ services:
         - SONARQUBE_JDBC_PASSWORD=/run/secrets/db_password
         - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonarqube
         - SONAR_WEB_CONTEXT=/sonarqube
+        - SONAR_SEARCH_DISABLED=false
+        - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
       ports:
         - "9000:9000"
         - "9092:9092"
       secrets:
          - db_password
-      labels:
-        - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
-        - "traefik.http.routers.sonarqube.entrypoints=web"
+     #  labels:
+         #- "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
+        # - "traefik.http.routers.sonarqube.entrypoints=web"
         # - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
   db:
       image: postgres
