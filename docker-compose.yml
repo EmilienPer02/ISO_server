@@ -19,7 +19,7 @@ services:
   sonarqube:
     image: sonarqube:community
     environment:
-      SONAR_JDBC_URL: jdbc:postgresql://sonarqube-db:5432/sonar
+      SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
       SONAR_JDBC_USERNAME: sonar
       SONAR_JDBC_PASSWORD: /run/secrets/db_password
       SONAR_WEB_CONTEXT: /sonarqube
@@ -34,7 +34,7 @@ services:
       - "traefik.http.routers.sonarqube.entrypoints=web"
       - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
 
-  sonarqube-db:
+  db:
     image: postgres:latest
     container_name: postgresql
     environment:
