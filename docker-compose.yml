@@ -34,9 +34,10 @@ services:
         - "9092:9092"
       secrets:
          - db_password
-     #  labels:
-         #- "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
-        # - "traefik.http.routers.sonarqube.entrypoints=web"
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
+        - "traefik.http.routers.sonarqube.entrypoints=web"
         # - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
   db:
       image: postgres
