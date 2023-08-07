@@ -4,6 +4,7 @@ services:
   traefik:
     image: traefik:latest
     command:
+      - --api
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
@@ -12,10 +13,7 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - "traefik.http.routers.traefik.rule=Host(`traefik.example.com`)"
-      - "traefik.http.routers.traefik.entrypoints=web"
-
+      
   sonarqube:
       image: sonarqube
       restart: unless-stopped
@@ -30,7 +28,7 @@ services:
       secrets:
          - db_password
       labels:
-        - "traefik.http.routers.sonarqube.rule=Host(`${DOMAIN}`) && PathPrefix(`/sonarqube`)"
+        - "traefik.http.routers.sonarqube.rule=Host(`10.1.20.100`) && Path(`/sonarqube`)"
         - "traefik.http.routers.sonarqube.entrypoints=web"
         - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
   db:
