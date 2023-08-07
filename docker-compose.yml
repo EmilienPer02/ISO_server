@@ -22,16 +22,15 @@ services:
       SONAR_JDBC_URL: jdbc:postgresql://sonarqube-db:5432/sonar
       SONAR_JDBC_USERNAME: sonar
       SONAR_JDBC_PASSWORD: /run/secrets/db_password
+      SONAR_WEB_CONTEXT: /sonar
     ports:
       - "127.0.0.1:9000:9000"
-    networks:
-      - sonarnet
     depends_on:
       - sonarqube-db
     secrets:
       - db_password
     labels:
-      - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
+      - "traefik.http.routers.sonarqube.rule=Host(`${DOMAIN}`) && PathPrefix(`/sonarqube`)"
       - "traefik.http.routers.sonarqube.entrypoints=web"
       - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
 
@@ -46,8 +45,6 @@ services:
       - postgresql:/var/lib/postgresql/data
     secrets:
       - db_password
-    networks:
-      - sonarnet
 
 
 
@@ -60,15 +57,9 @@ services:
       - "9411:9411"
       - "16686:16686"
       - "6831:6831/udp"
-    networks:
-      - sonarnet
     labels:
       - "traefik.http.routers.jaeger.rule=Host(`jaeger.example.com`)"
       - "traefik.http.routers.jaeger.entrypoints=web"
-
-networks:
-  sonarnet:
-    driver: bridge
 
 volumes:
   sonarqube-db-data:
