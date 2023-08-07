@@ -30,8 +30,8 @@ services:
         - SONAR_SEARCH_DISABLED=false
         - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
       ports:
-        - "9000:9000"
-        - "9092:9092"
+        - "127.0.0.1:9000:9000"
+        - "127.0.0.1:9092:9092"
       secrets:
          - db_password
       labels:
