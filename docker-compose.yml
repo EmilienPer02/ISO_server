@@ -24,8 +24,8 @@ services:
       restart: unless-stopped
       environment:
         - SONARQUBE_JDBC_USERNAME=sonarqube
-        - SONARQUBE_JDBC_PASSWORD=/run/secrets/db_password
-        - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonarqube
+        - SONARQUBE_JDBC_PASSWORD=/run/secrets/db_sonarqube_password
+        - SONARQUBE_JDBC_URL=jdbc:postgresql://db_sonarqube:5432/sonarqube
         - SONAR_WEB_CONTEXT=/sonarqube
         - SONAR_SEARCH_DISABLED=false
         - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
@@ -33,25 +33,47 @@ services:
         - "127.0.0.1:9000:9000"
         - "127.0.0.1:9092:9092"
       secrets:
-         - db_password
+         - db_sonarqube_password
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.sonarqube.rule=PathPrefix(`/sonarqube`)"
         - "traefik.http.routers.sonarqube.entrypoints=web"
-        # - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
-  db:
+  db_sonarqube:
       image: postgres
       restart: unless-stopped
       environment:
         - POSTGRES_USER=sonarqube
-        - POSTGRES_PASSWORD=/run/secrets/db_password
+        - POSTGRES_PASSWORD=/run/secrets/db_sonarqube_password
         - POSTGRES_DB=sonarqube
-     # volumes:
-     #   - sonarqube_db:/var/lib/postgresql
-     #   - postgresql_data:/var/lib/postgresql/data
       secrets:
-       - db_password
-
+       - db_sonarqube_password
+       
+  rabbitmq:
+    container_name: skf-rabbitmq_container
+    image: rabbitmq:3.8.19
+    environment:
+        - RABBITMQ_DEFAULT_USER=admin
+        - RABBITMQ_DEFAULT_PASS=/run/secrets/db_rabbitmq_password
+    ports:
+        - "5672:5672"
+        - "15672:15672"
+    secrets:
+       - db_rabbitmq_password
+  mysql:
+    container_name: skf-mysql_container
+    image: blabla1337/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'skf'
+      MYSQL_ROOT_PASSWORD: /run/secrets/db_msql_password
+      MYSQL_DEFAULT_PASS: /run/secrets/db_msql_password
+      MYSQL_DEFAULT_USER: 'root'
+    ports:
+      - '3306:3306'
+    volumes:
+       - mysql_data:/var/lib/mysql
+    secrets:
+       - db_msql_password
 volumes:
   sonarqube-db-data:
   sonarqube_data:
@@ -59,5 +81,9 @@ volumes:
   sonarqube_logs:
   postgresql:
 secrets:
-  db_password:
-    file: /tmp/db_password.txt
+  db_sonarqube_password:
+    file: /tmp/db_sonarqube_password.txt
+  db_rabbitmq_password:
+    file: /tmp/db_rabbitmq_password.txt
+  db_msql_password:
+    file: /tmp/db_msql_password.txt
