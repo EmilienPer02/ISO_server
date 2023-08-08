@@ -47,33 +47,7 @@ services:
         - POSTGRES_DB=sonarqube
       secrets:
        - db_sonarqube_password
-       
-  rabbitmq:
-    container_name: skf-rabbitmq_container
-    image: rabbitmq:3.8.19
-    environment:
-        - RABBITMQ_DEFAULT_USER=admin
-        - RABBITMQ_DEFAULT_PASS=/run/secrets/db_rabbitmq_password
-    ports:
-        - "5672:5672"
-        - "15672:15672"
-    secrets:
-       - db_rabbitmq_password
-  mysql:
-    container_name: skf-mysql_container
-    image: blabla1337/mysql
-    restart: always
-    environment:
-      MYSQL_DATABASE: 'skf'
-      MYSQL_ROOT_PASSWORD: /run/secrets/db_msql_password
-      MYSQL_DEFAULT_PASS: /run/secrets/db_msql_password
-      MYSQL_DEFAULT_USER: 'root'
-    ports:
-      - '3306:3306'
-    volumes:
-       - mysql_data:/var/lib/mysql
-    secrets:
-       - db_msql_password
+ 
 volumes:
   sonarqube-db-data:
   sonarqube_data:
@@ -83,7 +57,3 @@ volumes:
 secrets:
   db_sonarqube_password:
     file: /tmp/db_sonarqube_password.txt
-  db_rabbitmq_password:
-    file: /tmp/db_rabbitmq_password.txt
-  db_msql_password:
-    file: /tmp/db_msql_password.txt
