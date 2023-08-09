@@ -18,7 +18,6 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`traefik.example.com`)" # Remplacez par votre domaine
       - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.service=api@internal"
-    command: ["sh", "-c", "vault kv get -field=value secret/myapp"]
       
   sonarqube:
       image: sonarqube
@@ -56,8 +55,7 @@ services:
       - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
     ports:
       - "8200:8200"
-    command: vault server -dev -dev-root-token-id=root-token -log-level=debug
-
+    command: /bin/bash -c "chmod +x /init_vault.sh && /init_vault.sh"
 volumes:
   sonarqube-db-data:
   sonarqube_data:
