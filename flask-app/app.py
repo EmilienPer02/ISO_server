@@ -1,18 +1,24 @@
 from flask import Flask
 import requests
 import hvac
-
+import time
+ 
 app = Flask(__name__)
-
-# Initialize the Vault client
-client = hvac.Client(url='http://vault:8200')
-client.token = 'root-token'  # Use the root token for this example, not for production
-token_response = client.create_token(policies=['default'], ttl='1h')
-secret_response = client.secrets.transit.generate_data_key(
-        name='my-key-name',
-        context={'app': 'flask-app'},
-        key_type='plaintext',
-    )
+i=0
+while i<10:
+        try:
+                client = hvac.Client(url='http://vault:8200')
+                client.token = 'root-token'  # Use the root token for this example, not for production
+                token_response = client.create_token(policies=['default'], ttl='1h')
+                secret_response = client.secrets.transit.generate_data_key(
+                        name='my-key-name',
+                        context={'app': 'flask-app'},
+                        key_type='plaintext',
+                    )
+                break;
+        except:
+                time.sleep(2.4)
+                i+=1
 
 @app.route('/')
 def hello_world():
