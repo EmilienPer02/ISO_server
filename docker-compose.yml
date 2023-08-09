@@ -55,7 +55,19 @@ services:
       - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
     ports:
       - "8200:8200"
-    # command: /bin/bash -c "chmod +x /init_vault.sh && /init_vault.sh"
+    command: server -dev -dev-root-token-id=${VAULT_DEV_ROOT_TOKEN_ID}
+
+  flask_app:
+    build:
+      context: ./flask-app
+    container_name: flask_app
+    ports:
+      - "5000:5000"  # Flask app port
+    depends_on:
+      - vault
+    environment:
+      VAULT_ADDR: http://vault:8200
+
 volumes:
   sonarqube-db-data:
   sonarqube_data:
