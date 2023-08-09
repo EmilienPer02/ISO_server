@@ -60,7 +60,7 @@ services:
   flask_app:
     build:
       context: ./flask-app
-     # dockerfile: ./flask-app/Dockerfile
+      dockerfile: ./flask-app/Dockerfile
     container_name: flask_app
     ports:
       - "5000:5000"  # Flask app port
