@@ -67,6 +67,7 @@ services:
       - vault
     environment:
       VAULT_ADDR: http://vault:8200
+    command: ["python", "app.py"] 
 
 volumes:
   sonarqube-db-data:
