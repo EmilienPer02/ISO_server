@@ -11,6 +11,7 @@ token_response = client.create_token(policies=['default'], ttl='1h')
 secret_response = client.secrets.transit.generate_data_key(
         name='my-key-name',
         context={'app': 'flask-app'},
+        key_type='plaintext',
     )
 
 @app.route('/')
