@@ -17,9 +17,9 @@ while i<10:
                     )
                 break;
         except:
-                time.sleep(2.4)
+                time.sleep(20)
                 i+=1
-
+print("=========",i )
 @app.route('/')
 def hello_world():
     # Create a token for the Flask app
