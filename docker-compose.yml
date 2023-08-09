@@ -48,7 +48,7 @@ services:
       secrets:
        - db_sonarqube_password
   vault:
-    image: vault:latest
+    image: hashicorp/vault:latest
     container_name: vault
     environment:
       - VAULT_DEV_ROOT_TOKEN_ID=root-token
