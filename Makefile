@@ -9,5 +9,5 @@ clean:
 	docker-compose down
 hello:
 	@echo "Hello Word";
-	@ech $SEED;
+	@echo $SEED;
 	
