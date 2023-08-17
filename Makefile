@@ -1,5 +1,5 @@
 infra:
-	docker-compose up -f infra.yml
+	docker-compose up
 app:
 	docker-compose up
 build:
