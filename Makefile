@@ -1,7 +1,7 @@
 infra:
 	docker-compose up -d
 app:
-	docker-compose up
+	curl --header "X-Vault-Token: ..." --request POST --data "@templates/app_role.json" http://127.0.0.1:8200/v1/auth/approle/role/application1
 build:
 	docker-compose build
 
