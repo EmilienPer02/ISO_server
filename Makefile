@@ -1,11 +1,9 @@
 infra:
 	docker-compose up
-
 app:
-  docker-compose up
+	docker-compose up
 build:
-	docker-compose -f app.yml build
+	docker-compose build
 
 clean:
 	docker-compose down
-	docker-compose -f app.yml down
