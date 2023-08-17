@@ -8,6 +8,6 @@ build:
 clean:
 	docker-compose down
 hello:
-	@echo "Hello Word"
-	rand=${RANDOM};
-	echo $$rand;
+	@echo "Hello Word";
+	@ech $SEED;
+	
