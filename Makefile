@@ -9,4 +9,4 @@ clean:
 	docker-compose down
 hello:
 	@echo "Hello Word"
-	echo $RANDOM | md5sum | head -c 20; echo;
+	cat /dev/urandom | tr -dc '[:alpha:]' | fold -w ${1:-20} | head -n 1
