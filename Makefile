@@ -9,5 +9,5 @@ clean:
 	docker-compose down
 hello:
 	@echo "Hello Word"
-	password := $(openssl rand -hex 8)
-	echo $password;
+	rand=$$RANDOM && \
+	echo $rand;
