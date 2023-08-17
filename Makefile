@@ -10,4 +10,4 @@ clean:
 hello:
 	@echo "Hello Word"
 	rand=$$RANDOM && \
-	echo $rand;
+	echo $$rand;
