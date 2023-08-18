@@ -6,7 +6,7 @@ app:
 	SECRET_ID=$$(curl --request POST --header "X-Vault-Token: $(ROOTPASSWORD)" -s http://127.0.0.1:8200/v1/auth/approle/role/app/secret-id | jq -r '.data.secret_id'); \
 	DATA="{\"role_id\": \"$$ROLE_ID\",\"secret_id\": \"$$SECRET_ID\"}"; \
 	echo $$DATA; \
-	curl --request POST --header "X-Vault-Token: $(ROOTPASSWORD)" --data $$DATA http://127.0.0.1:8200/v1/auth/approle/login
+	curl --request POST --header "X-Vault-Token: $(ROOTPASSWORD)" --data '{"role_id": "'"$$ROLE_ID"'","secret_id": "'"$$SECRET_ID"'"}' http://127.0.0.1:8200/v1/auth/approle/login
 build:
 	docker-compose build
 
