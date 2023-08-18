@@ -10,7 +10,4 @@ build:
 
 clean:
 	docker-compose down
-hello:
-	@echo "Hello Word";
-	@echo $(ROOTPASSWORD);
 	
